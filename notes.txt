@@ -1,0 +1,3 @@
+response.css('div.mw-content-ltr').get()		-> Main body of the article
+response.css('h1.firstHeading::text').get()		-> Title of the article
+response.css('div.mw-content-ltr a::attr(href)')	-> All hyperlinks in the article
