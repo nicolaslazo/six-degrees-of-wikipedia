@@ -10,12 +10,11 @@ class WikiSpider(CrawlSpider):
     rules = [
             Rule(
                 LinkExtractor(allow='wiki/'),
-                callback='parse_article', 
                 follow=True
                 )
             ]
 
-    def parse_article(self, response):
+    def parse(self, response):
         print(f'Reached {response.url}.')
         yield {
                 'Title': response.css('h1.firstHeading::text').get()
