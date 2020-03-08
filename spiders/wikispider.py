@@ -5,10 +5,10 @@ import re
 class WikiSpider(scrapy.Spider):
     name = "WikiSpider"
     allowed_domains = ['en.wikipedia.org']
-    start_urls = ['https://en.wikipedia.org/wiki/Wikipedia']
+    start_urls = ['https://en.wikipedia.org/wiki/Ädelfors_folkhögskola']  # Arbitrary article placed for debugging purposes
 
     custom_settings = {
-                        'DEPTH_LIMIT': 6 + 1,  # Depth n = n-1 degrees of separation
+                        'DEPTH_LIMIT': 1 + 1,  # Depth n = n-1 degrees of separation
                         'DEPTH_PRIORITY': 10
                       }
 
@@ -42,3 +42,5 @@ class WikiSpider(scrapy.Spider):
                                     '#',
                                     'Main_Page',
                                ]
+
+        return all(map(lambda keyword: keyword not in url, blacklisted_keywords))
