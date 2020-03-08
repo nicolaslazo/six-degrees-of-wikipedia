@@ -37,7 +37,7 @@ class WikiSpider(scrapy.Spider):
                                     'Template:',
                                     'Talk:',
                                     'Portal:',
-                                    'Help',
+                                    'Help:',
                                     'Template talk:',
                                     '#',
                                     'Main_Page',
