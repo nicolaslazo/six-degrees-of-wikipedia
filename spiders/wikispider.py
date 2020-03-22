@@ -5,10 +5,9 @@ import scrapy
 class WikiSpider(scrapy.Spider):
     name = "WikiSpider"
     allowed_domains = ['en.wikipedia.org']
-    start_urls = ['https://en.wikipedia.org/wiki/Aschegul']  # Arbitrary article placed for debugging purposes
 
     custom_settings = {
-        'DEPTH_LIMIT': 1,  # Depth n = n-1 degrees of separation
+        'DEPTH_LIMIT': 6,
 
         # Crawling order settings (BFO)
         'DEPTH_PRIORITY': 1,
@@ -16,15 +15,16 @@ class WikiSpider(scrapy.Spider):
         'SCHEDULER_MEMORY_QUEUE': 'scrapy.squeues.FifoMemoryQueue',
 
         # Logging settings
-        # 'LOG_LEVEL':'INFO'
+        'LOG_LEVEL':'INFO'
     }
+
+    def __init__(self, start_article_url='', **kwargs):
+        self.start_urls = [start_article_url]
+        super().__init__(**kwargs)
 
 
     def parse(self, response):
-        print(f'[WIKISPIDER] Reached {response.url}.')
-
         if self.contains_blacklisted_keyword(response.url) or not self.is_valid_url(response.url):
-            print(f'[WIKISPIDER] ABANDONED {response.url}')
             return
 
         yield {
