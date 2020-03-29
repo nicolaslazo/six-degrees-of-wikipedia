@@ -7,7 +7,7 @@ class WikiSpider(scrapy.Spider):
     allowed_domains = ['en.wikipedia.org']
 
     custom_settings = {
-        'DEPTH_LIMIT': 6,
+        'DEPTH_LIMIT': 1,
 
         # Crawling order settings (BFO)
         'DEPTH_PRIORITY': 1,
@@ -23,16 +23,24 @@ class WikiSpider(scrapy.Spider):
         super().__init__(**kwargs)
 
 
-    def parse(self, response):
+    def parse(self, response, **kwargs):
         if self.contains_blacklisted_keyword(response.url) or not self.is_valid_url(response.url):
             return
 
+        article_title = response.css('h1.firstHeading::text').get()
+
+        try:
+            parent = kwargs['parent']
+        except KeyError:
+            parent = None
+
         yield {
-            'Title': response.css('h1.firstHeading::text').get(),
+            'Title': article_title,
+            'Parent': parent,
             'URL': response.url
         }
 
-        yield from response.follow_all(css='div.mw-content-ltr a::attr(href)')
+        yield from response.follow_all(css='div.mw-parser-output a::attr(href)', cb_kwargs={ 'parent': article_title })
 
 
     def is_valid_url(self, url):
