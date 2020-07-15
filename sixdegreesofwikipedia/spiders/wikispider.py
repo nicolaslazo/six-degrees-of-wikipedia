@@ -7,7 +7,7 @@ class WikiSpider(scrapy.Spider):
     allowed_domains = ['en.wikipedia.org']
 
     custom_settings = {
-        'DEPTH_LIMIT': 1,
+        'DEPTH_LIMIT': 6,
 
         # Crawling order settings (BFO)
         'DEPTH_PRIORITY': 1,
@@ -15,7 +15,7 @@ class WikiSpider(scrapy.Spider):
         'SCHEDULER_MEMORY_QUEUE': 'scrapy.squeues.FifoMemoryQueue',
 
         # Logging settings
-        'LOG_LEVEL':'INFO'
+        'LOG_LEVEL':'ERROR'
     }
 
     def __init__(self, start_article_url='', **kwargs):

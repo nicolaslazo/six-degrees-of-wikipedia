@@ -1,0 +1,25 @@
+#!/bin/bash
+
+exit_error() {
+    echo "Usage: $0 [ -d DEPTH_LIMIT ] START_URL OUTPUT_FILE" 1>&2
+    exit 1
+}
+
+while getopts "d:" options; do
+case "$options" in
+    d) DEPTH_ARGUMENT=$OPTARG; echo set $OPTARG something;;
+    :) echo "Error: -${OPTARG} requires an argument"; exit_error;;
+    *) exit_error;;
+esac
+done
+
+START_URL=${@:$OPTIND:1}
+OUTPUT_FILE=${@:$OPTIND+1:1}
+cat /dev/null > $OUTPUT_FILE
+
+if [ $(( $# - $OPTIND  )) -lt 1 ]; then exit_error; fi
+
+DEPTH_SETTING=""
+if [ -n ${DEPTH_ARGUMENT} ]; then DEPTH_SETTING="-s DEPTH_LIMIT=$DEPTH_ARGUMENT"; fi
+
+scrapy crawl $DEPTH_SETTING -a start_article_url=$START_URL -o $OUTPUT_FILE WikiSpider
